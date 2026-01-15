@@ -17,7 +17,6 @@
 
         <!-- AOT size optimization options -->
         <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/trimming/trimming-options#trim-framework-library-features -->
-        <!--
         <OptimizationPreference>Speed</OptimizationPreference>
         <DebuggerSupport>false</DebuggerSupport>
         <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
@@ -33,7 +32,6 @@
         <UseSizeOptimizedLinq>false</UseSizeOptimizedLinq>
         <UseSystemResourceKeys>true</UseSystemResourceKeys>
         <XmlResolverIsNetworkingEnabledByDefault>false</XmlResolverIsNetworkingEnabledByDefault>
-        -->
     </PropertyGroup>
 
 </Project>
