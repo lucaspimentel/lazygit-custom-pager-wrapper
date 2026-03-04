@@ -15,12 +15,14 @@
         -->
         <PublishAot>true</PublishAot>
 
-        <!-- AOT size optimization options -->
+        <!-- AOT optimization -->
+        <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/native-aot/optimizing -->
         <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/trimming/trimming-options#trim-framework-library-features -->
         <OptimizationPreference>Speed</OptimizationPreference>
+        <IlcOptimizationPreference>Speed</IlcOptimizationPreference>
+        <IlcFoldIdenticalMethodBodies>true</IlcFoldIdenticalMethodBodies>
+        <IlcGenerateStackTraceData>false</IlcGenerateStackTraceData>
         <DebuggerSupport>false</DebuggerSupport>
-        <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
-        <EnableUnsafeUTF7Encoding>false</EnableUnsafeUTF7Encoding>
         <EventSourceSupport>false</EventSourceSupport>
         <Http3Support>false</Http3Support>
         <HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
@@ -29,7 +31,6 @@
         <MetricsSupport>false</MetricsSupport>
         <StackTraceSupport>false</StackTraceSupport>
         <UseNativeHttpHandler>true</UseNativeHttpHandler>
-        <UseSizeOptimizedLinq>false</UseSizeOptimizedLinq>
         <UseSystemResourceKeys>true</UseSystemResourceKeys>
         <XmlResolverIsNetworkingEnabledByDefault>false</XmlResolverIsNetworkingEnabledByDefault>
     </PropertyGroup>
