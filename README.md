@@ -7,7 +7,7 @@ A high-performance custom pager wrapper for [lazygit](https://github.com/jessedu
 - **Blazing Fast**: Built with .NET 10 Native AOT compilation for sub-millisecond startup time
 - **Tiny Binary**: ~2MB self-contained executable with no runtime dependencies
 - **Zero Allocation Hot Path**: Uses stack allocation and spans for optimal performance
-- **Cross-Platform**: Supports Windows, macOS (x64/ARM64), and Linux
+- **Windows-Focused**: Designed for Windows where lazygit lacks native paging support (also builds on macOS/Linux)
 
 ## Why This Tool?
 
@@ -61,53 +61,37 @@ This will build and install the binary to `~/.local/bin/lazygit-custom-pager-wra
    export PATH="$HOME/.local/bin:$PATH"
    ```
 
-## Configuration
+## Lazygit Configuration
 
-### Lazygit Setup
+Add an `externalDiffCommand` entry to the `git.pagers` list in your lazygit config file.
 
-Add the following to your lazygit configuration file:
+**Config file location:** `%LOCALAPPDATA%\lazygit\config.yml`
 
-**Location:**
-- Linux/macOS: `~/.config/lazygit/config.yml`
-- Windows: `C:\Users\<username>\.config\lazygit\config.yml`
+### Basic Usage
 
-**Basic Configuration:**
 ```yaml
 git:
   pagers:
     - externalDiffCommand: lazygit-custom-pager-wrapper
 ```
 
-**Advanced: Pipe Through Delta (Recommended)**
+### With Delta (Recommended)
 
-For syntax highlighting and better diff visualization:
+For syntax highlighting and better diff visualization, pipe the output through [delta](https://github.com/dandavison/delta). The install script places a `lazygit-pager.bat` wrapper alongside the executable that does this automatically. Reference it in your lazygit config:
 
 ```yaml
 git:
   pagers:
-    - externalDiffCommand: "lazygit-custom-pager-wrapper | delta --features=\"lazygit\" --width=%LAZYGIT_COLUMNS%"
+    - externalDiffCommand: $USERPROFILE/.local/bin/lazygit-pager.bat
 ```
 
-Or create a wrapper script (e.g., `~/.local/bin/lazygit-pager.bat` on Windows):
+The wrapper script runs:
 ```batch
 @echo off
 lazygit-custom-pager-wrapper %* | delta --features="default-feature lazygit" --width=%LAZYGIT_COLUMNS%
 ```
 
-Then reference it in config:
-```yaml
-git:
-  pagers:
-    - externalDiffCommand: "$USERPROFILE/.local/bin/lazygit-pager.bat"
-```
-
-### Alternative: Direct Git Configuration
-
-You can also configure this tool directly in your git config if you use it outside of lazygit:
-
-```bash
-git config --global mergetool.customdiff.cmd 'lazygit-custom-pager-wrapper "$MERGED" "$LOCAL" "$BASE" "$BASE" "$REMOTE"'
-```
+> **Tip:** You can define multiple `externalDiffCommand` entries in the `pagers` list. Lazygit lets you cycle between them at runtime.
 
 ## Usage
 
@@ -144,7 +128,7 @@ lazygit-custom-pager-wrapper src/Program.cs /tmp/local_abc123 x x /tmp/remote_xy
    - Searches for the local or remote temporary path in each line
    - Replaces it with the actual merged file path
    - Outputs the modified line
-5. Returns the exit code from the git diff process
+5. Returns exit code 0
 
 ## Performance Details
 
@@ -177,7 +161,8 @@ dotnet publish -c Release -r win-x64
 - `Program.cs` - Single-file application with all logic
 - `lazygit-custom-pager-wrapper.csproj` - Project file with Native AOT configuration
 - `Directory.Build.props` - Build output directory configuration (artifacts/)
-- `install-local.ps1` - Cross-platform installation script
+- `lazygit-pager.bat` - Delta wrapper script installed alongside the exe
+- `install-local.ps1` - Installation script (builds and installs to `~/.local/bin`)
 
 ### Native AOT Optimizations
 
@@ -216,7 +201,7 @@ Verify your lazygit config:
 cat ~/.config/lazygit/config.yml | grep pager
 
 # Windows
-type %APPDATA%\lazygit\config.yml | findstr pager
+type %LOCALAPPDATA%\lazygit\config.yml | findstr pager
 ```
 
 ## License

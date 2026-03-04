@@ -90,6 +90,14 @@ if (Test-Path $installPath) {
 Write-Host "Installing to: $installPath" -ForegroundColor Cyan
 Copy-Item $exePath $installPath -Force
 
+# Install the delta wrapper script (Windows only)
+if ($IsWindows) {
+    $pagerScript = Join-Path $PSScriptRoot 'lazygit-pager.bat'
+    $pagerInstallPath = Join-Path $installDir 'lazygit-pager.bat'
+    Write-Host "Installing wrapper script to: $pagerInstallPath" -ForegroundColor Cyan
+    Copy-Item $pagerScript $pagerInstallPath -Force
+}
+
 # Set executable permissions on Unix systems
 if (-not $IsWindows) {
     chmod +x $installPath
@@ -122,5 +130,23 @@ Then restart your shell or source the file.
 "@ -ForegroundColor White
 }
 
-Write-Host "Usage:" -ForegroundColor Cyan
-Write-Host '    lazygit-custom-pager-wrapper <mergedPath> <localPath> <unused> <unused> <remotePath>' -ForegroundColor White
+Write-Host "Lazygit Configuration:" -ForegroundColor Cyan
+Write-Host @"
+
+Add an externalDiffCommand entry to your lazygit config file:
+
+  Config file location: %LOCALAPPDATA%\lazygit\config.yml
+
+  Basic usage (add to config.yml):
+    git:
+      pagers:
+        - externalDiffCommand: lazygit-custom-pager-wrapper
+
+  With delta (recommended) — lazygit-pager.bat was installed alongside the exe:
+    git:
+      pagers:
+        - externalDiffCommand: `$USERPROFILE/.local/bin/lazygit-pager.bat
+
+For more details, see the README.md file.
+
+"@ -ForegroundColor White
