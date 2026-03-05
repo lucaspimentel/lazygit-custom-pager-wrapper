@@ -1,8 +1,11 @@
 .idea/
 .vs/
 .vscode/
+.claude/*.local.*
+
 artifacts/
 bin/
 obj/
+
 *.user
 *.suo
